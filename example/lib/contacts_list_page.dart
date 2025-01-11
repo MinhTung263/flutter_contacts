@@ -11,7 +11,7 @@ class ContactListPage extends StatefulWidget {
 }
 
 class _ContactListPageState extends State<ContactListPage> {
-  List<Contact> _contacts;
+  late List<Contact> _contacts;
 
   @override
   void initState() {
@@ -90,7 +90,7 @@ class _ContactListPageState extends State<ContactListPage> {
             ? ListView.builder(
                 itemCount: _contacts?.length ?? 0,
                 itemBuilder: (BuildContext context, int index) {
-                  Contact c = _contacts?.elementAt(index);
+                  Contact c = _contacts?.elementAt(index) ?? Contact();
                   return ListTile(
                     onTap: () {
                       Navigator.of(context).push(MaterialPageRoute(
@@ -100,8 +100,8 @@ class _ContactListPageState extends State<ContactListPage> {
                                     contactOnDeviceHasBeenUpdated,
                               )));
                     },
-                    leading: (c.avatar != null && c.avatar.length > 0)
-                        ? CircleAvatar(backgroundImage: MemoryImage(c.avatar))
+                    leading: (c.avatar != null && (c.avatar?.length ?? 0) > 0)
+                        ? CircleAvatar(backgroundImage: MemoryImage(c.avatar!))
                         : CircleAvatar(child: Text(c.initials())),
                     title: Text(c.displayName ?? ""),
                   );
@@ -202,7 +202,7 @@ class ContactDetailsPage extends StatelessWidget {
             ListTile(
               title: Text("Birthday"),
               trailing: Text(_contact.birthday != null
-                  ? DateFormat('dd-MM-yyyy').format(_contact.birthday)
+                  ? DateFormat('dd-MM-yyyy').format(_contact.birthday!)
                   : ""),
             ),
             ListTile(
@@ -219,9 +219,9 @@ class ContactDetailsPage extends StatelessWidget {
                   ? _contact.androidAccountType.toString()
                   : ""),
             ),
-            AddressesTile(_contact.postalAddresses),
-            ItemsTile("Phones", _contact.phones),
-            ItemsTile("Emails", _contact.emails)
+            AddressesTile(_contact.postalAddresses!),
+            ItemsTile("Phones", _contact.phones!),
+            ItemsTile("Emails", _contact.emails!)
           ],
         ),
       ),
